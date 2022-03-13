@@ -1,36 +1,6 @@
-// global
-export const globalState = { soundStarted: false };
-
-const defaultParams = {
-  sliceSize: {
-    type: "slider",
-    min: 1,
-    max: 80,
-    step: 1,
-    value: 1,
-  },
-  msPerFrame: {
-    type: "slider",
-    min: 1,
-    max: 80,
-    step: 1,
-    value: 1,
-  },
-  canvasSize: {
-    type: "slider",
-    min: 50,
-    max: 800,
-    step: 1,
-    value: 320,
-  },
-  scanStartPos: {
-    type: "slider",
-    min: 0.01,
-    max: 1,
-    step: 0.01,
-    value: 0.6,
-  },
-  mountSize: {
+/*
+Examples
+mountSize: {
     type: "slider",
     min: 0,
     max: 0.5,
@@ -42,80 +12,24 @@ const defaultParams = {
     options: ["start", "middle", "end"],
     value: "middle",
   },
-  isHorizontal: {
-    type: "checkbox",
-    value: false,
-  },
-  isReflected: {
+*/
+
+const defaultParams = {
+  flipX: {
     type: "checkbox",
     value: true,
   },
-  soundOn: {
+  flipY: {
     type: "checkbox",
     value: false,
   },
 };
 const params = JSON.parse(JSON.stringify(defaultParams));
 
-function debounce(func, timeout = 300) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
-  };
-}
-
-function addPhysicalControls(params) {
-  var socket = io();
-  socket.on(
-    "sliceSizeChange",
-    debounce((e) => {
-      const { min, max, value: currValue } = params.sliceSize;
-      const increment = e.value === "R" ? 1 : -1;
-      let newValue = currValue + increment;
-      if (newValue < min) newValue = min;
-      if (newValue > max) newValue = max;
-
-      params.sliceSize.value = newValue;
-    }, 50)
-  );
-
-  socket.on(
-    "webcamPositionChange",
-    debounce((e) => {
-      const { options, value: currValue } = params.webcamPosition;
-      const increment = e.value === "R" ? 1 : -1;
-      const currIndex = options.findIndex(opt => opt === currValue);
-      
-      let newIndex = currIndex + increment;
-      if (newIndex < 0) newIndex = options.length-1;
-      if (newIndex > options.length-1) newIndex = 0;
-
-      params.webcamPosition.value = options[newIndex];
-    }, 50)
-  );
-
-  socket.on(
-    "isReflected",
-    debounce((e) => {
-      params.isReflected.value = !params.isReflected.value
-    }, 100)
-  );
-
-  socket.on(
-    "doReset",
-    debounce((e) => {
-      resetAllParams();
-    }, 100)
-  );
-}
-
-function resetAllParams(){
+function resetAllParams() {
   const keys = Object.keys(params);
 
-  for(let key of keys){
+  for (let key of keys) {
     params[key].value = defaultParams[key].value;
   }
 }
@@ -198,8 +112,6 @@ export function initControls(controlsElement) {
 
     controlsElement.appendChild(holdingDiv);
   }
-
-  addPhysicalControls(params);
 
   return params;
 }
