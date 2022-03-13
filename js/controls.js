@@ -17,16 +17,16 @@ mountSize: {
 const defaultParams = {
   flipX: {
     type: "checkbox",
-    value: true,
+    value: window.localStorage.getItem("flipX") === "false" ? false : true,
   },
   flipY: {
     type: "checkbox",
-    value: false,
+    value: window.localStorage.getItem("flipY") === "false" ? false : true,
   },
 };
 const params = JSON.parse(JSON.stringify(defaultParams));
 
-function resetAllParams() {
+export function resetAllParams() {
   const keys = Object.keys(params);
 
   for (let key of keys) {
@@ -61,6 +61,7 @@ export function initControls(controlsElement) {
       inputElement.addEventListener("input", (e) => {
         c.value = e.target.value;
         valueElement.innerHTML = c.value;
+        window.localStorage.setItem(key, c.value);
       });
       inputElements.push(inputElement);
       //
@@ -71,6 +72,7 @@ export function initControls(controlsElement) {
       inputElement.addEventListener("input", (e) => {
         c.value = e.target.checked;
         valueElement.innerHTML = c.value;
+        window.localStorage.setItem(key, c.value);
       });
       inputElements.push(inputElement);
       //
@@ -92,6 +94,7 @@ export function initControls(controlsElement) {
 
         inputElement.addEventListener("input", (e) => {
           c.value = e.target.value;
+          window.localStorage.setItem(key, c.value);
         });
       }
     }
