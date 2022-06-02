@@ -2,7 +2,7 @@ import { getFlippedVideoCanvas } from "./utils/getFlippedVideoCanvas.js";
 import { initControls } from "./controls.js";
 
 // app elements
-const appElement = document.querySelector("#app");
+const closeControlButt = document.querySelector("#closeControlButt");
 const controls = document.querySelector("#controls");
 const artCanvas = document.querySelector("#artCanvas");
 const video = document.querySelector("#videoElement");
@@ -15,17 +15,15 @@ const webcamRes = { w: 800, h: 600 };
 // set up controls, webcam etc
 export function setup() {
   // hide controls by default and if app is right clicked
-  appElement.addEventListener("contextmenu", onAppRightClick);
+  document.addEventListener("dblclick", (e) => {
+    e.preventDefault();
+    controls.style.display = "inherit";
+  });
   controls.style.display = "none";
 
-  function onAppRightClick(e) {
-    e.preventDefault();
-    if (controls.style.display === "none") {
-      controls.style.display = "inherit";
-    } else {
-      controls.style.display = "none";
-    }
-  }
+  closeControlButt.addEventListener("click", () => {
+    controls.style.display = "none";
+  });
 
   if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices
